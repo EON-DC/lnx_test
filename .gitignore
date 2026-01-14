@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+data/**
+models/**
+outputs/**
+src/**
+*.zip
+.vscode
+*.csv
+*.Identifier
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
