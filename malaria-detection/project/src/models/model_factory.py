@@ -1,10 +1,11 @@
 from __future__ import annotations
 import tensorflow as tf
-from tensorflow.keras import layers as L
+import keras
+from keras import layers as L
 from src.utils.config import Config
 
 
-def build_model(cfg: Config, num_classes: int) -> tf.keras.Model:
+def build_model(cfg: Config, num_classes: int) -> keras.Model:
     if cfg.model.num_classes != num_classes:
         # config와 실제 dataset이 다르면 dataset 기준을 우선
         num_classes = num_classes
@@ -20,7 +21,7 @@ def build_model(cfg: Config, num_classes: int) -> tf.keras.Model:
     raise ValueError(f"Unknown model name: {cfg.model.name}")
 
 
-def _simple_cnn(cfg: Config, num_classes: int) -> tf.keras.Model:
+def _simple_cnn(cfg: Config, num_classes: int) -> keras.Model:
     inputs = L.Input(shape=(cfg.data.img_size, cfg.data.img_size, 3), name="image")
 
     x = L.Conv2D(32, 3, padding="same")(inputs)
@@ -39,12 +40,16 @@ def _simple_cnn(cfg: Config, num_classes: int) -> tf.keras.Model:
     x = L.GlobalAveragePooling2D()(x)
 
     x = L.Dropout(cfg.model.dropout)(x)
-    outputs = L.Dense(num_classes, activation="softmax", name="probs")(x)
+    # before
+    # outputs = L.Dense(num_classes, activation="softmax", name="probs")(x)
 
-    return tf.keras.Model(inputs, outputs, name="simple_cnn")
+    # after (binary)
+    outputs = L.Dense(1, activation="sigmoid", name="prob")(x)
+
+    return keras.Model(inputs, outputs, name="simple_cnn")
 
 
-def _lenet_like(cfg: Config, num_classes: int) -> tf.keras.Model:
+def _lenet_like(cfg: Config, num_classes: int) -> keras.Model:
     inputs = L.Input(shape=(cfg.data.img_size, cfg.data.img_size, 3), name="image")
 
     x = L.Conv2D(6, 5, padding="valid", activation="relu")(inputs)
@@ -57,15 +62,18 @@ def _lenet_like(cfg: Config, num_classes: int) -> tf.keras.Model:
     x = L.Dense(120, activation="relu")(x)
     x = L.Dense(84, activation="relu")(x)
     x = L.Dropout(cfg.model.dropout)(x)
-    outputs = L.Dense(num_classes, activation="softmax", name="probs")(x)
+    # before
+    # outputs = L.Dense(num_classes, activation="softmax", name="probs")(x)
 
-    return tf.keras.Model(inputs, outputs, name="lenet_like")
+    # after (binary)
+    outputs = L.Dense(1, activation="sigmoid", name="prob")(x)
+    return keras.Model(inputs, outputs, name="lenet_like")
 
 
-def _resnet50(cfg: Config, num_classes: int) -> tf.keras.Model:
+def _resnet50(cfg: Config, num_classes: int) -> keras.Model:
     inputs = L.Input(shape=(cfg.data.img_size, cfg.data.img_size, 3), name="image")
 
-    base = tf.keras.applications.ResNet50(
+    base = keras.applications.ResNet50(
         include_top=False,
         weights="imagenet",
         input_tensor=inputs,
@@ -75,6 +83,18 @@ def _resnet50(cfg: Config, num_classes: int) -> tf.keras.Model:
 
     x = base.outputs[0]
     x = L.Dropout(cfg.model.dropout)(x)
-    outputs = L.Dense(num_classes, activation="softmax", name="probs")(x)
+    # before
+    # outputs = L.Dense(num_classes, activation="softmax", name="probs")(x)
 
-    return tf.keras.Model(inputs, outputs, name="resnet50")
+    # after (binary)
+    outputs = L.Dense(1, activation="sigmoid", name="prob")(x)
+    return keras.Model(inputs, outputs, name="resnet50")
+
+
+def build_optimizer(name: str, lr: float):
+    name = name.lower()
+    if name == "adam":
+        return keras.optimizers.Adam(lr)
+    if name == "sgd":
+        return keras.optimizers.SGD(lr, momentum=0.9)
+    raise ValueError(name)

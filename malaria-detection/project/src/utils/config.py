@@ -50,12 +50,20 @@ class TrainCfg:
 
 
 @dataclass(frozen=True)
+class ReportCfg:
+    load_tb_after_fit: bool
+    is_need_save_draw_auc: bool
+    tensorboard_port: int  # default port
+
+
+@dataclass(frozen=True)
 class Config:
     run: RunCfg
     data: DataCfg
     augment: AugmentCfg
     model: ModelCfg
     train: TrainCfg
+    report: ReportCfg
 
 
 def _get(d: Dict[str, Any], path: str) -> Any:
@@ -106,6 +114,11 @@ def load_config(path: str) -> Config:
             monitor=_get(raw, "train.monitor"),
             monitor_mode=_get(raw, "train.monitor_mode"),
             early_stop_patience=int(_get(raw, "train.early_stop_patience")),
+        ),
+        report=ReportCfg(
+            load_tb_after_fit=bool(_get(raw, "report.load_tb_after_fit")),
+            is_need_save_draw_auc=bool(_get(raw, "report.is_need_save_draw_auc")),
+            tensorboard_port=int(_get(raw, "report.tensorboard_port")),
         ),
     )
     return cfg

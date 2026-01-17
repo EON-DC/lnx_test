@@ -3,6 +3,7 @@ import argparse
 import os
 import platform
 import tensorflow as tf
+import keras
 
 from src.utils.config import load_config
 from src.utils.seed import set_global_seed
@@ -11,20 +12,20 @@ from src.data.pipeline import build_datasets
 from src.models.model_factory import build_model
 
 
-def build_optimizer(name: str, lr: float) -> tf.keras.optimizers.Optimizer:
+def build_optimizer(name: str, lr: float) -> keras.optimizers.Optimizer:
     name = name.lower()
     if name == "adam":
-        return tf.keras.optimizers.Adam(learning_rate=lr)
+        return keras.optimizers.Adam(learning_rate=lr)
     if name == "sgd":
-        return tf.keras.optimizers.SGD(learning_rate=lr, momentum=0.9)
+        return keras.optimizers.SGD(learning_rate=lr, momentum=0.9)
     raise ValueError(f"Unknown optimizer: {name}")
 
 
 def build_metrics(num_classes: int):
     # binary/multi-class 모두 대응 (AUC는 multi_class='ovo'가 필요할 수 있지만 템플릿은 단순화)
     return [
-        tf.keras.metrics.SparseCategoricalAccuracy(name="accuracy"),
-        tf.keras.metrics.AUC(name="auc"),
+        keras.metrics.SparseCategoricalAccuracy(name="accuracy"),
+        keras.metrics.AUC(name="auc"),
     ]
 
 
@@ -59,20 +60,20 @@ def main():
     best_savedmodel_dir = os.path.join(run_dir, "best_savedmodel")
 
     callbacks = [
-        tf.keras.callbacks.TensorBoard(log_dir=tb_dir),
-        tf.keras.callbacks.ModelCheckpoint(
+        keras.callbacks.TensorBoard(log_dir=tb_dir),
+        keras.callbacks.ModelCheckpoint(
             filepath=os.path.join(ckpt_dir, "last.weights.h5"),
             save_weights_only=True,
             save_best_only=False,
         ),
-        tf.keras.callbacks.ModelCheckpoint(
+        keras.callbacks.ModelCheckpoint(
             filepath=os.path.join(ckpt_dir, "best.weights.h5"),
             save_weights_only=True,
             monitor=cfg.train.monitor,
             mode=cfg.train.monitor_mode,
             save_best_only=True,
         ),
-        tf.keras.callbacks.EarlyStopping(
+        keras.callbacks.EarlyStopping(
             monitor=cfg.train.monitor,
             mode=cfg.train.monitor_mode,
             patience=cfg.train.early_stop_patience,

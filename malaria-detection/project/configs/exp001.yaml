@@ -25,10 +25,15 @@ model:
   base_trainable: true        # resnet50 쓸 때 backbone freeze 여부
 
 train:
-  epochs: 10
+  epochs: 1
   optimizer: "adam"
   learning_rate: 0.001
   loss: "sparse_categorical_crossentropy"
   monitor: "val_auc"
   monitor_mode: "max"
   early_stop_patience: 5
+
+report:
+  load_tb_after_fit: true
+  is_need_save_draw_auc: true
+  tensorboard_port: 6006
