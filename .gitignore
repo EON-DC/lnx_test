@@ -8,6 +8,8 @@ src/**
 .vscode
 *.csv
 *.Identifier
+**/logs/**
+**/runs/**
 
 # Environments
 .env
