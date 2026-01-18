@@ -1,0 +1,10 @@
+cat > scripts/git-hooks/pre-commit << 'SH'
+#!/usr/bin/env bash
+set -e
+files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.ipynb$' || true)
+[ -z "$files" ] && exit 0
+nbstripout $files
+git add $files
+SH
+
+chmod +x scripts/git-hooks/pre-commit
