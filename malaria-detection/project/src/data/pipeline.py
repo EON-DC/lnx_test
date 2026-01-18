@@ -19,7 +19,8 @@ def preprocess_image(
 ) -> Tuple[tf.Tensor, tf.Tensor]:
     # resize + rescale
     image = tf.image.resize(image, (cfg.data.img_size, cfg.data.img_size))
-    image = tf.cast(image, tf.float32) / 255.0
+    image = tf.cast(image, tf.float32) / 255.0  # type: ignore
+
     return image, label
 
 
@@ -30,17 +31,17 @@ def augment_image(
         return image, label
 
     if cfg.augment.random_flip:
-        image = tf.image.random_flip_left_right(image)
+        image = tf.image.random_flip_left_right(image)  # type: ignore
 
     if cfg.augment.random_brightness and cfg.augment.random_brightness > 0:
         image = tf.image.random_brightness(
             image, max_delta=cfg.augment.random_brightness
-        )
+        )  # type: ignore
 
     if cfg.augment.random_contrast and cfg.augment.random_contrast > 0:
         lower = max(0.0, 1.0 - cfg.augment.random_contrast)
         upper = 1.0 + cfg.augment.random_contrast
-        image = tf.image.random_contrast(image, lower=lower, upper=upper)
+        image = tf.image.random_contrast(image, lower=lower, upper=upper)  # type: ignore
 
     return image, label
 
@@ -66,7 +67,7 @@ def _build_tfds_malaria(
     val_ds = rest.take(val_n) if val_n > 0 else None
     test_ds = rest.skip(val_n).take(test_n) if test_n > 0 else None
 
-    return train_ds, val_ds, test_ds, info
+    return train_ds, val_ds, test_ds, info  # type: ignore
 
 
 def build_datasets(
@@ -84,7 +85,7 @@ def build_datasets(
             )
 
         train_raw, val_raw, test_raw, info = _build_tfds_malaria(cfg)
-        num_classes = info.features["label"].num_classes
+        num_classes = info.features["label"].num_classes  # type: ignore
 
     else:
         raise ValueError(

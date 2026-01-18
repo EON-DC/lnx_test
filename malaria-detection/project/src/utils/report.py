@@ -18,10 +18,29 @@ def save_eval_report(
         .tolist()
     )
 
+    false_neg = cm[0][1]
+    false_pos = cm[1][0]
+    true_neg = cm[0][0]
+    true_pos = cm[1][1]
+    precision = true_pos / (true_pos + false_pos) if (true_pos + false_pos) > 0 else 0.0
+    recall = true_pos / (true_pos + false_neg) if (true_pos + false_neg) > 0 else 0.0
+    f1_score = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall) > 0
+        else 0.0
+    )
+
     report = {
         "num_samples": int(len(y_true)),
         "confusion_matrix": cm,
         "accuracy": float(np.mean(y_true == y_pred)) if len(y_true) > 0 else None,
+        "false_neg": false_neg,
+        "false_pos": false_pos,
+        "true_neg": true_neg,
+        "true_pos": true_pos,
+        "precision": precision,
+        "recall": recall,
+        "f1_score": f1_score,
     }
 
     path = os.path.join(run_dir, "eval_report.json")

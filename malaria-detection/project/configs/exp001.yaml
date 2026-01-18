@@ -5,10 +5,10 @@ run:
 
 data:
   dataset: "tfds:malaria"     # "tfds:malaria" 또는 "dir:/path/to/images"
-  img_size: 128
+  img_size: 224
   batch_size: 32
-  val_split: 0.2
-  test_split: 0.0
+  val_split: 0.1
+  test_split: 0.1
   shuffle_buffer: 10000
   num_parallel_calls: "AUTOTUNE"
 
@@ -20,15 +20,15 @@ augment:
 
 model:
   name: "simple_cnn"          # simple_cnn | lenet_like | resnet50
-  num_classes: 2
+  num_classes: 1
   dropout: 0.2
   base_trainable: true        # resnet50 쓸 때 backbone freeze 여부
 
 train:
-  epochs: 1
+  epochs: 10
   optimizer: "adam"
   learning_rate: 0.001
-  loss: "sparse_categorical_crossentropy"
+  loss: "binary_crossentropy"
   monitor: "val_auc"
   monitor_mode: "max"
   early_stop_patience: 5
