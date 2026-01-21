@@ -10,6 +10,10 @@ src/**
 *.Identifier
 **/logs/**
 **/runs/**
+**/dataset/**
+*.keras
+*.h5
+
 
 # Environments
 .env
@@ -28,6 +32,9 @@ venv.bak/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# kaggle api
+kaggle.json
 
 !scripts/git-hooks/pre-commit
 !scripts/git-hooks/
