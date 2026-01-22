@@ -1,7 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 data/**
-models/**
+**/models/**
 outputs/**
 src/**
 *.zip
@@ -11,8 +11,10 @@ src/**
 **/logs/**
 **/runs/**
 **/dataset/**
+**/pictures/**
 *.keras
 *.h5
+
 
 
 # Environments
