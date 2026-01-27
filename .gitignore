@@ -12,6 +12,7 @@ src/**
 **/runs/**
 **/dataset/**
 **/pictures/**
+**/summary/**
 *.keras
 *.h5
 
