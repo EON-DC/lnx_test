@@ -15,8 +15,15 @@ outputs/**
 **/summary/**
 *.keras
 *.h5
-
-
+**/time-series-forcasting/**
+*.tar
+**/nnUNet/**
+**/amex-predection/**
+iris/input/**
+iris/output/**
+myproject/outputs/**
+graph/elliptic_dataset/**
+**/data/**
 
 # Environments
 .env

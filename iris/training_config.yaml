@@ -1,0 +1,8 @@
+config_path: training_config.yaml
+learning_rate: 0.001
+batch_size: 32
+num_epochs: 10
+model_save_path: output/model.pth
+log_save_path: output/logs
+config_save_path: output/training_config.yaml
+input_db_path: input/database.sqlite

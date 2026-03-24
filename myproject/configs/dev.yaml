@@ -1,0 +1,5 @@
+app_name: sample-cli-app
+mode: dev
+output_dir: outputs/dev
+seed: 42
+message: hello from dev config

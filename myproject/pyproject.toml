@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "myapp-template"
+version = "0.1.0"
+description = "Sample Python project with src layout, dataclass config, env support, logging, and split train/infer/eval entrypoints"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "PyYAML>=6.0",
+  "pytest>=8.0",
+]
+
+[project.scripts]
+myapp-train = "myapp.train:main"
+myapp-infer = "myapp.infer:main"
+myapp-eval = "myapp.eval:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

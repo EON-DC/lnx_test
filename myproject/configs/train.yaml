@@ -1,0 +1,12 @@
+app_name: myapp-template
+mode: train
+log_level: INFO
+output_root: outputs
+seed: 42
+device: cpu
+train:
+  epochs: 5
+  batch_size: 16
+  learning_rate: 0.001
+  train_data: data/train.csv
+  model_path: outputs/models/model.txt

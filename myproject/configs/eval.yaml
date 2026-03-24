@@ -1,0 +1,10 @@
+app_name: myapp-template
+mode: eval
+log_level: INFO
+output_root: outputs
+seed: 42
+device: cpu
+eval:
+  prediction_path: outputs/predictions/preds.csv
+  target_path: data/target.csv
+  report_path: outputs/reports/eval_report.json
